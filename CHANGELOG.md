@@ -1,6 +1,6 @@
 # Değişiklikler
 
-## 3.0.0 (yayınlanmadı)
+## 3.0.0 (2026-11-16)
 
 Uyumu bozan sürüm. Geçiş: [UPGRADE.md](UPGRADE.md).
 
