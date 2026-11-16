@@ -1,21 +1,35 @@
 {
     "name": "netgsm/otp",
-    "description": "NETGSM OTP",
-    "type": "package",
+    "description": "Netgsm SMS API v3 ile OTP SMS gönderimi",
+    "type": "library",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Netgsm\\Otp\\": "src/"
-        }
-    },
+    "keywords": ["netgsm", "otp", "sms"],
     "authors": [
         {
             "name": "Netgsm OTP",
             "email": "teknikdestek@netgsm.com.tr"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": ">=7.2.5"
+        "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Netgsm\\Otp\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Netgsm\\Otp\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
