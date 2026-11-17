@@ -1,5 +1,9 @@
 # Değişiklikler
 
+## 3.0.1 (2026-11-17)
+
+- Dokümanda alıcı biçimi E.164 (`+905XXXXXXXXX`) olarak belirtildi. Kodda değişiklik yok.
+
 ## 3.0.0 (2026-11-16)
 
 Uyumu bozan sürüm. Geçiş: [UPGRADE.md](UPGRADE.md).
