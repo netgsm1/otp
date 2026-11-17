@@ -291,9 +291,6 @@ final class OtpTest extends TestCase
 
     public function testStackTraceHidesSecrets(): void
     {
-        if (PHP_VERSION_ID < 80200) {
-            self::markTestSkipped('SensitiveParameter PHP 8.2 ile gelir.');
-        }
         $previous = ini_set('zend.exception_ignore_args', '0');
         try {
             (new Otp('u', 'secret', 'H', $this->cache, 'http://127.0.0.1:' . self::freePort()))->send('+905061234567', 'a');

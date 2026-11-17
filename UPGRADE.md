@@ -13,7 +13,8 @@ kodunuz güncellenmeden çalışmaz.
 
 ## Adımlar
 
-1. PHP'yi 8.1 ya da üzerine yükseltin.
+1. PHP'yi 8.2 ya da üzerine yükseltin. 8.1'de kalmanız gerekiyorsa 3.0.x kurulur; ancak şifrenin hata
+   kayıtlarında gizlenmesi orada çalışmaz.
 2. Paketi güncelleyin:
 
    ```bash

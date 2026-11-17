@@ -7,7 +7,7 @@ OTP mesajları toplu SMS'ten ayrı bir kanaldan anında iletilir; zamanlanamaz.
 
 ## Gereksinimler
 
-- PHP 8.1 ya da üzeri, `ext-curl`, `ext-json`
+- PHP 8.2 ya da üzeri, `ext-curl`, `ext-json` (PHP 8.1 için 3.0.x sürümünü kullanın)
 - Netgsm hesabınızda OTP SMS hizmeti
 - API erişimi açık bir kullanıcı (API alt kullanıcısı önerilir) ve sunucunuzun IP adresi için API
   erişim izni. Portalda: Abonelik İşlemleri → API İşlemleri. Ayrıntılar

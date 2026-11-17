@@ -1,5 +1,10 @@
 # Değişiklikler
 
+## 3.1.0 (2026-11-17)
+
+- PHP 8.2 gerekir. 8.1'in güvenlik desteği 31 Aralık 2025'te bitti ve şifreyi hata kayıtlarında gizleyen
+  `#[\SensitiveParameter]` 8.1'de çalışmaz. PHP 8.1'de Composer 3.0.x'i kurar. Kodda başka değişiklik yok.
+
 ## 3.0.2 (2026-11-17)
 
 ### Güvenlik
