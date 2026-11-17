@@ -78,8 +78,8 @@ Alıcıyı E.164 biçiminde (`+905XXXXXXXXX`) verin; 2.x'teki `553XXXXXXX` numar
 
 - Türkçe karakterler Latin karşılığına çevrilir (`ğ` → `g`); emoji gibi desteklenmeyen karakterler `?`
   olur. Metin en fazla 155 karakterdir (abone numarasıyla 160).
-- 2.x'teki dakikada 100 gönderim sınırı (kod 80) v3 OTP ucunda tanımlı değil. Token isteği ise IP
-  başına dakikada 30 ile sınırlıdır; bu yüzden token önbelleği gerekir.
+- Gönderim sınırı aşılınca (2.x'te kod 80) `429 RATE_LIMITED` döner. Token isteği ayrıca IP başına
+  dakikada 30 ile sınırlıdır (`429 rate_limited`); bu yüzden token önbelleği gerekir.
 - `503` alındığında paket iki kez tekrar dener. `500` ve bağlantı hatasında tekrar denemez;
   `mayHaveBeenSent` OTP'nin gitmiş olabileceğini gösterir.
 
@@ -93,9 +93,9 @@ Kodunuz 2.x'in sayısal kodlarına göre karar veriyorsa yeni karşılıkları:
 | 30 | Kullanıcı adı, şifre, API izni ya da IP | Token alırken `401 invalid_credentials`, `403 ip_not_allowed`; gönderimde `403 FORBIDDEN` |
 | 40, 41 | Gönderici adı hatalı | `422 REJECTED_HEADER` |
 | 50 | Numara hatalı | `400 INVALID_REQUEST` (`recipient is not a valid number`) |
-| 60 | OTP paketi tanımlı değil | Yaklaşık karşılık: `422 INSUFFICIENT_CREDIT` ya da `403 FORBIDDEN` (`account is not activated for this operation`) |
+| 60 | OTP paketi tanımlı değil | `422 INSUFFICIENT_CREDIT` |
 | 70 | Parametre hatası | `400 INVALID_REQUEST` (`violations` alanı belirtir) |
-| 80 | Dakikada 100 gönderim sınırı aşıldı | Karşılığı yok: v3 OTP ucunda istek sınırı tanımlı değil |
+| 80 | Gönderim sınırı aşıldı | `429 RATE_LIMITED` |
 | 100 | Sistem hatası | `500 INTERNAL_ERROR` ya da `503 SERVICE_UNAVAILABLE` |
 
 Tüm kodlar: [README → Hata yönetimi](README.md#hata-yönetimi).

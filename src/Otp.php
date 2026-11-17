@@ -35,7 +35,7 @@ class Otp
 
     public function __construct(
         ?string $username = null,
-        ?string $password = null,
+        #[\SensitiveParameter] ?string $password = null,
         ?string $sender = null,
         private readonly ?CacheInterface $cache = null,
         string $baseUrl = 'https://ext-api.netgsm.com.tr',
@@ -149,7 +149,7 @@ class Otp
     }
 
     /** Başka bir istek token'ı zaten yenilediyse yenisini silmez. */
-    private function forgetToken(string $staleToken): void
+    private function forgetToken(#[\SensitiveParameter] string $staleToken): void
     {
         $key = $this->cacheKey();
         if ($this->cache !== null) {
@@ -161,9 +161,10 @@ class Otp
         }
     }
 
+    /** Şifre anahtara katılır: aynı abone numarasıyla yanlış şifre verilirse önbellekteki token kullanılmaz. */
     private function cacheKey(): string
     {
-        return 'netgsm_otp_' . sha1($this->baseUrl . '|' . $this->username);
+        return 'netgsm_otp_' . hash_hmac('sha256', $this->baseUrl . '|' . $this->username, $this->password);
     }
 
     /**
@@ -171,7 +172,12 @@ class Otp
      *
      * @return array{int, array} HTTP durum kodu ve JSON gövde
      */
-    private function post(string $path, array $body, ?string $token = null, array $headers = []): array
+    private function post(
+        string $path,
+        #[\SensitiveParameter] array $body,
+        #[\SensitiveParameter] ?string $token = null,
+        array $headers = [],
+    ): array
     {
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Accept: application/json';
@@ -199,6 +205,21 @@ class Otp
         $json = json_decode((string) $raw, true);
 
         return [(int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE), is_array($json) ? $json : []];
+    }
+
+    /** var_dump, print_r ve dump() çıktısında şifre görünmez. */
+    public function __debugInfo(): array
+    {
+        return [
+            'username' => $this->username,
+            'password' => '***',
+            'sender' => $this->sender,
+            'baseUrl' => $this->baseUrl,
+            'cache' => $this->cache !== null ? $this->cache::class : null,
+            'enterprise' => $this->enterprise,
+            'appName' => $this->appName,
+            'timeout' => $this->timeout,
+        ];
     }
 
     private static function env(string $name): ?string

@@ -264,6 +264,50 @@ final class OtpTest extends TestCase
         }
     }
 
+    public function testWrongPasswordDoesNotReuseCachedToken(): void
+    {
+        $this->stub([
+            self::TOKEN => [self::token('t1'), self::error(401, 'invalid_credentials')],
+            self::OTP => [self::accepted('1')],
+        ]);
+        $this->otp()->send('+905061234567', 'a');
+
+        try {
+            (new TestOtp('8500000000', 'wrong', 'TESTHEADER', $this->cache, self::$baseUrl))->send('+905061234567', 'b');
+            self::fail('OtpException bekleniyordu');
+        } catch (OtpException $e) {
+            self::assertSame('invalid_credentials', $e->errorCode);
+        }
+        self::assertSame([self::TOKEN, self::OTP, self::TOKEN], array_column($this->log(), 'path'));
+    }
+
+    public function testDebugOutputHidesPassword(): void
+    {
+        $otp = $this->otp();
+
+        self::assertStringNotContainsString('secret', print_r($otp, true));
+        self::assertStringNotContainsString('secret', var_export($otp->__debugInfo(), true));
+    }
+
+    public function testStackTraceHidesSecrets(): void
+    {
+        if (PHP_VERSION_ID < 80200) {
+            self::markTestSkipped('SensitiveParameter PHP 8.2 ile gelir.');
+        }
+        $previous = ini_set('zend.exception_ignore_args', '0');
+        try {
+            (new Otp('u', 'secret', 'H', $this->cache, 'http://127.0.0.1:' . self::freePort()))->send('+905061234567', 'a');
+            self::fail('OtpException bekleniyordu');
+        } catch (OtpException $e) {
+            $frames = array_filter($e->getTrace(), fn ($f) => ($f['class'] ?? '') === Otp::class);
+            self::assertNotEmpty($frames);
+            self::assertStringContainsString('SensitiveParameterValue', print_r($frames, true));
+            self::assertStringNotContainsString('secret', print_r($frames, true));
+        } finally {
+            ini_set('zend.exception_ignore_args', (string) $previous);
+        }
+    }
+
     private function otp(): TestOtp
     {
         return new TestOtp('8500000000', 'secret', 'TESTHEADER', $this->cache, self::$baseUrl);

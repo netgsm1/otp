@@ -102,6 +102,8 @@ Notlar:
 
 - Cache'teki token 24 saat geçerli bir erişim anahtarıdır. Dosya cache'i kullanıyorsanız dizin web'den
   erişilemez olmalı.
+- Cache anahtarı adres, abone numarası ve şifreden üretilir. Aynı abone numarası farklı bir şifreyle
+  verilirse önbellekteki token kullanılmaz, yeniden giriş yapılır.
 - Birden fazla sunucuda her sunucunun kendi cache'i de çalışır (her biri ayrı oturum açar). Redis gibi
   paylaşılan bir cache yalnızca giriş sayısını azaltır.
 - Token'ın süresi dolmadan yeni giriş yapılır. Netgsm token'ı daha önce geçersiz sayarsa (`401`) paket
@@ -166,6 +168,7 @@ Paketin kendisi şunları yapar:
 
 - `401`: bir kez yeniden giriş yapar ve isteği tekrarlar.
 - `503`: 1 ve 2 saniye bekleyerek iki kez tekrar dener. `503`'te hiçbir şey gönderilmemiştir.
+- `429`: tekrar denemez. Hiçbir şey gönderilmemiştir.
 - `500`: tekrar denemez. OTP gönderilmiş olabilir (`mayHaveBeenSent` `true`).
 
 Sık karşılaşılan kodlar (küçük harfli olanlar token alınırken döner):
@@ -179,6 +182,7 @@ Sık karşılaşılan kodlar (küçük harfli olanlar token alınırken döner):
 | 403 | `FORBIDDEN` | Hesapta hizmet açık değil, alt kullanıcının SMS yetkisi yok ya da `enterprise` hesabınıza uymuyor | `getMessage()` nedeni söyler. |
 | 422 | `REJECTED_HEADER` | Gönderici adı hesabınızda kayıtlı değil ya da kullanılamıyor | Kayıtlı başlıklarınızı portalda kontrol edin. |
 | 422 | `INSUFFICIENT_CREDIT` | OTP için kredi, paket ya da kampanya yok | Bakiye ya da paket tanımlayın. Hiçbir şey gönderilmedi. |
+| 429 | `RATE_LIMITED` | OTP gönderim sınırı aşıldı | Hiçbir şey gönderilmedi; bir süre sonra tekrar deneyin. |
 | 429 | `rate_limited` | IP başına dakikada 30 token isteği aşıldı | Token önbelleği verin. |
 | 500 | `INTERNAL_ERROR` | Netgsm tarafında beklenmeyen hata | Otomatik tekrar yok; `requestId` ile bildirin. |
 | 503 | `SERVICE_UNAVAILABLE` | İki tekrardan sonra servis hâlâ kullanılamıyor | Hiçbir şey gönderilmedi; daha sonra tekrar deneyin. |
