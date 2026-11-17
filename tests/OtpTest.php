@@ -76,8 +76,8 @@ final class OtpTest extends TestCase
     {
         $this->stub([self::TOKEN => [self::token('t1')], self::OTP => [self::accepted('1'), self::accepted('2')]]);
 
-        $this->otp()->send('5061234567', 'a');
-        $this->otp()->send('5061234567', 'b');
+        $this->otp()->send('905061234567', 'a');
+        $this->otp()->send('905061234567', 'b');
 
         self::assertSame([self::TOKEN, self::OTP, self::OTP], array_column($this->log(), 'path'));
     }
@@ -87,8 +87,8 @@ final class OtpTest extends TestCase
         $this->stub([self::TOKEN => [self::token('t1')], self::OTP => [self::accepted('1'), self::accepted('2')]]);
 
         // Süreç içi bellek statiktir; başka testlerle çakışmasın diye ayrı kullanıcı.
-        (new TestOtp('memory-user', 'secret', 'TESTHEADER', null, self::$baseUrl))->send('5061234567', 'a');
-        (new TestOtp('memory-user', 'secret', 'TESTHEADER', null, self::$baseUrl))->send('5061234567', 'b');
+        (new TestOtp('memory-user', 'secret', 'TESTHEADER', null, self::$baseUrl))->send('905061234567', 'a');
+        (new TestOtp('memory-user', 'secret', 'TESTHEADER', null, self::$baseUrl))->send('905061234567', 'b');
 
         self::assertSame([self::TOKEN, self::OTP, self::OTP], array_column($this->log(), 'path'));
     }
@@ -97,9 +97,9 @@ final class OtpTest extends TestCase
     {
         $this->stub([self::TOKEN => [self::token('t1', 1), self::token('t2')], self::OTP => [self::accepted('1'), self::accepted('2')]]);
 
-        $this->otp()->send('5061234567', 'a');
+        $this->otp()->send('905061234567', 'a');
         sleep(1);
-        $this->otp()->send('5061234567', 'b');
+        $this->otp()->send('905061234567', 'b');
 
         $log = $this->log();
         self::assertSame([self::TOKEN, self::OTP, self::TOKEN, self::OTP], array_column($log, 'path'));
@@ -113,7 +113,7 @@ final class OtpTest extends TestCase
             self::OTP => [self::error(401, 'UNAUTHENTICATED'), self::accepted('9')],
         ]);
 
-        self::assertSame('9', $this->otp()->send('5061234567', 'a'));
+        self::assertSame('9', $this->otp()->send('905061234567', 'a'));
         self::assertSame('Bearer t2', $this->log()[3]['headers']['authorization']);
     }
 
@@ -137,7 +137,7 @@ final class OtpTest extends TestCase
         ]);
 
         $otp = $this->otp();
-        self::assertSame('7', $otp->send('5061234567', 'a'));
+        self::assertSame('7', $otp->send('905061234567', 'a'));
         self::assertSame([1, 2], $otp->pauses);
     }
 
@@ -194,7 +194,7 @@ final class OtpTest extends TestCase
         $this->stub([self::TOKEN => [self::token('t1')], self::OTP => [self::accepted('1')]]);
 
         (new TestOtp('8500000000', 'secret', 'TESTHEADER', $this->cache, self::$baseUrl, enterprise: true, appName: 'shop'))
-            ->send('5061234567', 'a');
+            ->send('905061234567', 'a');
 
         $send = $this->log()[1];
         self::assertSame('enterprise', $send['headers']['x-client']);
@@ -205,7 +205,7 @@ final class OtpTest extends TestCase
     {
         $this->stub([self::TOKEN => [self::token('t1')], self::OTP => [self::accepted('1')]]);
 
-        $this->otp()->send('5061234567', 'a', 'OTHER');
+        $this->otp()->send('905061234567', 'a', 'OTHER');
 
         self::assertSame('OTHER', $this->log()[1]['body']['sender']);
     }
@@ -218,7 +218,7 @@ final class OtpTest extends TestCase
         $_ENV['NETGSM_HEADER'] = 'ENVHEADER';
 
         try {
-            (new TestOtp(cache: $this->cache, baseUrl: self::$baseUrl))->send('5061234567', 'a');
+            (new TestOtp(cache: $this->cache, baseUrl: self::$baseUrl))->send('905061234567', 'a');
         } finally {
             unset($_ENV['NETGSM_USERCODE'], $_ENV['NETGSM_PASSWORD'], $_ENV['NETGSM_HEADER']);
         }
@@ -238,7 +238,7 @@ final class OtpTest extends TestCase
     {
         $this->stub([]);
         try {
-            (new Otp('u', 'p', null, $this->cache, self::$baseUrl))->send('5061234567', 'a');
+            (new Otp('u', 'p', null, $this->cache, self::$baseUrl))->send('905061234567', 'a');
             self::fail('InvalidArgumentException bekleniyordu');
         } catch (InvalidArgumentException) {
             self::assertSame([], $this->log());
@@ -256,7 +256,7 @@ final class OtpTest extends TestCase
         $otp = new Otp('u', 'p', 'H', $this->cache, 'http://127.0.0.1:' . self::freePort());
 
         try {
-            $otp->send('5061234567', 'a');
+            $otp->send('905061234567', 'a');
             self::fail('OtpException bekleniyordu');
         } catch (OtpException $e) {
             self::assertSame('NETWORK_ERROR', $e->errorCode);
@@ -272,7 +272,7 @@ final class OtpTest extends TestCase
     private function sendExpectingError(): OtpException
     {
         try {
-            $this->otp()->send('5061234567', 'a');
+            $this->otp()->send('905061234567', 'a');
         } catch (OtpException $e) {
             return $e;
         }

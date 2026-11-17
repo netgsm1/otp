@@ -62,7 +62,7 @@ class Otp
     /**
      * Tek alıcıya OTP gönderir.
      *
-     * @param string $recipient 5XXXXXXXXX, 05XXXXXXXXX, 905XXXXXXXXX ya da +905XXXXXXXXX
+     * @param string $recipient 905XXXXXXXXX ya da +905XXXXXXXXX
      * @param string|null $sender verilmezse NETGSM_HEADER / constructor'daki gönderici
      *
      * @return string jobId

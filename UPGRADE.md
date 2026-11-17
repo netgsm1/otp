@@ -57,7 +57,7 @@ use Netgsm\Otp\OtpException;
 $otp = new Otp(cache: $cache);
 
 try {
-    $jobId = $otp->send('553XXXXXXX', 'Kodunuz: 1234', 'BASLIK');
+    $jobId = $otp->send('90553XXXXXXX', 'Kodunuz: 1234', 'BASLIK');
 } catch (OtpException $e) {
     error_log($e->getMessage());
 }
@@ -72,7 +72,7 @@ try {
 | Ayar eksikse `'x'` ile gönderim | `InvalidArgumentException` |
 | `api.netgsm.com.tr/sms/send/otp` (XML) | `ext-api.netgsm.com.tr/sms/v3/send/otp` (JSON, token) |
 
-2.x'teki `553XXXXXXX` numara biçimi 3.0'da da geçerlidir.
+Alıcıyı `905XXXXXXXXX` ya da `+905XXXXXXXXX` biçiminde verin; 2.x'teki `553XXXXXXX` numaraların başına `90` ekleyin.
 
 ## Davranış farkları
 
