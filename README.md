@@ -122,7 +122,7 @@ Notlar:
 
 ## Alıcı, gönderici ve metin
 
-- **Alıcı:** Türkiye cep numarası: `905XXXXXXXXX` ya da `+905XXXXXXXXX`.
+- **Alıcı:** E.164 biçiminde Türkiye cep numarası: `+905XXXXXXXXX`.
   Boşluklu yazım ve yurt dışı numaraları kabul edilmez.
 - **Gönderici:** Hesabınıza kayıtlı gönderici adı; büyük/küçük harf fark etmez. Abone numarasıyla
   gönderim yalnızca bu izni olan hesaplarda yapılabilir.
